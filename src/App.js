@@ -20,6 +20,11 @@ const App = () => {
     }
   };
 
+  const deleteNote = (noteToDelete) => {
+    const arrayOfNotes = data.filter((note) => note.text !== noteToDelete.text);
+    setData(arrayOfNotes);
+  };
+
   return (
     <div>
       <input
@@ -33,7 +38,10 @@ const App = () => {
       />
       <button onClick={() => addNote()}>Add note</button>
       {data.map((note) => (
-        <p key={note.text}>{note.text}</p>
+        <div key={note.text}>
+          <p>{note.text}</p>
+          <button onClick={() => deleteNote(note)}>Delete Note</button>
+        </div>
       ))}
     </div>
   );
