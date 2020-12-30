@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import './App.css';
+import MDEditor from '@uiw/react-md-editor';
 
 const App = () => {
   const [data, setData] = useState([{ text: 'Test note' }]);
@@ -10,26 +11,9 @@ const App = () => {
 
   const noteInput = useRef(null);
 
-  useEffect(() => {
-    if (editMode) {
-      // current property is refered to input element
-      noteInput.current.focus();
-    }
-  }, [editMode]);
-
-  const passNoteToState = ({ target }) => {
-    setNote(target.value);
-  };
-
   const addNote = () => {
     setData((data) => [...data, { text: note }]);
     setNote('');
-  };
-
-  const addNoteWithEnter = (event) => {
-    if (event.keyCode === 13) {
-      addNote();
-    }
   };
 
   const deleteNote = (noteToDelete) => {
@@ -44,24 +28,14 @@ const App = () => {
     }
     setEditMode(true);
     noteToBeEdit.isBeingEdited = true;
-    setNoteToEdit({ text: noteToBeEdit.text });
-  };
-
-  const passEditNoteToState = ({ target }) => {
-    setNoteToEdit({ text: target.value });
+    setNoteToEdit(noteToBeEdit.text);
   };
 
   const saveChanges = (oldNote, newNote) => {
     const noteToChange = data.filter((note) => note.text === oldNote.text);
-    noteToChange[0].text = newNote.text;
+    noteToChange[0].text = newNote;
     setEditMode(false);
     noteToChange[0].isBeingEdited = false;
-  };
-
-  const saveChangesWithEnter = (event, oldNote, newNote) => {
-    if (event.keyCode === 13) {
-      saveChanges(oldNote, newNote);
-    }
   };
 
   if (error) {
@@ -70,10 +44,18 @@ const App = () => {
     }, 3000);
   }
 
+  /*<textarea
+    ref={noteInput}
+    className="w-full py-2 px-5"
+    value={noteToEdit.text}
+    onChange={passEditNoteToState}
+    onKeyDown={(e) => saveChangesWithEnter(e, note, noteToEdit)}
+  />*/
+
   return (
     <div className="relative bg-gray-100 h-screen p-10">
       <div className="shadow-sm">
-        <input
+        {/*<textarea
           className="py-2 px-5 w-10/12"
           id="noteinput"
           type="text"
@@ -81,6 +63,16 @@ const App = () => {
           value={note}
           onChange={passNoteToState}
           onKeyDown={(e) => addNoteWithEnter(e)}
+       />*/}
+        <MDEditor
+          className="py-2 px-5 w-10/12"
+          id="noteinput"
+          type="text"
+          placeholder="Enter a new note"
+          value={note}
+          onChange={setNote}
+          preview="edit"
+          hideToolbar
         />
         <button
           className="py-2 px-5 bg-gray-200 w-2/12 hover:bg-gray-300"
@@ -94,15 +86,18 @@ const App = () => {
           <div key={note.text} className="flex flex-col mb-10">
             <div className="w-full">
               {note.isBeingEdited === true ? (
-                <input
+                <MDEditor
                   ref={noteInput}
                   className="w-full py-2 px-5"
-                  value={noteToEdit.text}
-                  onChange={passEditNoteToState}
-                  onKeyDown={(e) => saveChangesWithEnter(e, note, noteToEdit)}
+                  value={noteToEdit}
+                  onChange={setNoteToEdit}
+                  preview="edit"
+                  hideToolbar
                 />
               ) : (
-                <p className="w-full py-2 px-5 bg-white">{note.text}</p>
+                <MDEditor.Markdown className="w-full py-2 px-5 bg-white">
+                  {note.text}
+                </MDEditor.Markdown>
               )}
             </div>
             <div>
