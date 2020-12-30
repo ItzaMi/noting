@@ -44,26 +44,9 @@ const App = () => {
     }, 3000);
   }
 
-  /*<textarea
-    ref={noteInput}
-    className="w-full py-2 px-5"
-    value={noteToEdit.text}
-    onChange={passEditNoteToState}
-    onKeyDown={(e) => saveChangesWithEnter(e, note, noteToEdit)}
-  />*/
-
   return (
     <div className="relative bg-gray-100 h-screen p-10">
       <div className="shadow-sm">
-        {/*<textarea
-          className="py-2 px-5 w-10/12"
-          id="noteinput"
-          type="text"
-          placeholder="Enter a new note"
-          value={note}
-          onChange={passNoteToState}
-          onKeyDown={(e) => addNoteWithEnter(e)}
-       />*/}
         <MDEditor
           className="py-2 px-5 w-10/12"
           id="noteinput"
