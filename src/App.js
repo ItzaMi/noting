@@ -105,8 +105,8 @@ const App = () => {
         {data.map((note) => (
           <div key={note.text} className="flex flex-col mb-10">
             <div className="w-full">
-              <div className="w-full py-2 px-5 bg-white">
-                <p>{titleOfNote(note.text)}</p>
+              <div className="w-full py-5 px-5 bg-white">
+                <p className="font-bold text-lg">{titleOfNote(note.text)}</p>
               </div>
             </div>
             <div>
