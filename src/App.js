@@ -3,7 +3,7 @@ import './App.css';
 import MDEditor from '@uiw/react-md-editor';
 
 const App = () => {
-  const [data, setData] = useState([{ text: 'Test note' }]);
+  const [data, setData] = useState([{ text: 'Test note\n# Hello' }]);
   const [note, setNote] = useState('Start your new note here');
   const [editMode, setEditMode] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState('');
@@ -54,6 +54,21 @@ const App = () => {
     setNoteToEdit(noteToBeEdit.text);
   };
 
+  const titleOfNote = (noteText) => {
+    let firstPhraseWithoutSpecialCharacters = noteText
+      .split('\n')[0]
+      .replace(/[^\w\s]/gi, '');
+
+    if (firstPhraseWithoutSpecialCharacters.length > 70) {
+      firstPhraseWithoutSpecialCharacters = firstPhraseWithoutSpecialCharacters.substring(
+        0,
+        70
+      );
+      // firstPhraseWithoutSpecialCharacters.substring(0, 70 - 3) + '...';
+    }
+    return firstPhraseWithoutSpecialCharacters;
+  };
+
   return (
     <div className="relative bg-gray-100 h-screen flex flex-row">
       <div className="w-9/12">
@@ -90,9 +105,9 @@ const App = () => {
         {data.map((note) => (
           <div key={note.text} className="flex flex-col mb-10">
             <div className="w-full">
-              <MDEditor.Markdown className="w-full py-2 px-5 bg-white">
-                {note.text}
-              </MDEditor.Markdown>
+              <div className="w-full py-2 px-5 bg-white">
+                <p>{titleOfNote(note.text)}</p>
+              </div>
             </div>
             <div>
               <button
