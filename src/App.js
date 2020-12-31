@@ -1,19 +1,18 @@
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import MDEditor from '@uiw/react-md-editor';
 
 const App = () => {
   const [data, setData] = useState([{ text: 'Test note' }]);
-  const [note, setNote] = useState('');
+  const [note, setNote] = useState('Start your new note here');
   const [editMode, setEditMode] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState('');
   const [error, setError] = useState(false);
-
-  const noteInput = useRef(null);
+  const [editorHeight, setEditorHeight] = useState(window.innerHeight);
 
   const addNote = () => {
     setData((data) => [...data, { text: note }]);
-    setNote('');
+    setNote('Start your new note here');
   };
 
   const deleteNote = (noteToDelete) => {
@@ -21,21 +20,12 @@ const App = () => {
     setData(arrayOfNotes);
   };
 
-  const editNote = (noteToBeEdit) => {
-    if (editMode) {
-      setError(true);
-      return;
-    }
-    setEditMode(true);
-    noteToBeEdit.isBeingEdited = true;
-    setNoteToEdit(noteToBeEdit.text);
-  };
-
-  const saveChanges = (oldNote, newNote) => {
-    const noteToChange = data.filter((note) => note.text === oldNote.text);
-    noteToChange[0].text = newNote;
+  const saveChanges = (noteToEdit, newTextNote) => {
+    const noteToChange = data.filter((note) => note.text === noteToEdit);
+    noteToChange[0].text = newTextNote;
     setEditMode(false);
     noteToChange[0].isBeingEdited = false;
+    setNote('Start your new note here');
   };
 
   if (error) {
@@ -44,11 +34,31 @@ const App = () => {
     }, 3000);
   }
 
+  const updateMDEditorHeight = () => {
+    setEditorHeight(window.innerHeight);
+  };
+
+  useEffect(() => {
+    window.addEventListener('load', updateMDEditorHeight);
+    window.addEventListener('resize', updateMDEditorHeight);
+  });
+
+  const viewNote = (noteToBeEdit) => {
+    if (editMode) {
+      setError(true);
+      return;
+    }
+    setNote(noteToBeEdit.text);
+    setEditMode(true);
+    noteToBeEdit.isBeingEdited = true;
+    setNoteToEdit(noteToBeEdit.text);
+  };
+
   return (
-    <div className="relative bg-gray-100 h-screen p-10">
-      <div className="shadow-sm">
+    <div className="relative bg-gray-100 h-screen flex flex-row">
+      <div className="w-9/12">
         <MDEditor
-          className="py-2 px-5 w-10/12"
+          className="py-2 px-5"
           id="noteinput"
           type="text"
           placeholder="Enter a new note"
@@ -56,32 +66,33 @@ const App = () => {
           onChange={setNote}
           preview="edit"
           hideToolbar
+          visiableDragbar={false}
+          height={editorHeight}
+          style={{ height: editorHeight, borderRadius: '0px' }}
         />
-        <button
-          className="py-2 px-5 bg-gray-200 w-2/12 hover:bg-gray-300"
-          onClick={() => addNote()}
-        >
-          Add note
-        </button>
       </div>
-      <div className="m-10">
+      <div className="w-3/12 bg-gray-200 h-screen overflow-scroll">
+        {editMode ? (
+          <button
+            className="py-2 px-5 w-full bg-gray-700 text-white hover:bg-gray-900"
+            onClick={() => saveChanges(noteToEdit, note)}
+          >
+            Save Changes
+          </button>
+        ) : (
+          <button
+            className="py-2 px-5 w-full bg-blue-700 text-white hover:bg-blue-900"
+            onClick={() => addNote()}
+          >
+            Add note
+          </button>
+        )}
         {data.map((note) => (
           <div key={note.text} className="flex flex-col mb-10">
             <div className="w-full">
-              {note.isBeingEdited === true ? (
-                <MDEditor
-                  ref={noteInput}
-                  className="w-full py-2 px-5"
-                  value={noteToEdit}
-                  onChange={setNoteToEdit}
-                  preview="edit"
-                  hideToolbar
-                />
-              ) : (
-                <MDEditor.Markdown className="w-full py-2 px-5 bg-white">
-                  {note.text}
-                </MDEditor.Markdown>
-              )}
+              <MDEditor.Markdown className="w-full py-2 px-5 bg-white">
+                {note.text}
+              </MDEditor.Markdown>
             </div>
             <div>
               <button
@@ -90,21 +101,12 @@ const App = () => {
               >
                 Delete Note
               </button>
-              {note.isBeingEdited === true ? (
-                <button
-                  className="text-xs font-light mr-2 text-blue-400 hover:text-blue-500"
-                  onClick={() => saveChanges(note, noteToEdit)}
-                >
-                  Save Changes
-                </button>
-              ) : (
-                <button
-                  className="text-xs font-light mr-2 text-blue-400 hover:text-blue-500"
-                  onClick={() => editNote(note)}
-                >
-                  Edit Note
-                </button>
-              )}
+              <button
+                className="text-xs font-light mr-2 text-blue-400 hover:text-blue-500"
+                onClick={() => viewNote(note)}
+              >
+                View Note
+              </button>
             </div>
           </div>
         ))}
