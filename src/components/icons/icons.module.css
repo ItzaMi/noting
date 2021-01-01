@@ -5,12 +5,12 @@
 .editIcon,
 .viewIcon,
 .deleteIcon {
-  stroke: #aaadac;
-  transition: stroke 0.2s ease-in-out;
+  fill: #aaadac;
+  transition: fill 0.2s ease-in-out;
 }
 
 .deleteIcon:hover {
-  stroke: #eb4c34;
+  fill: #eb4c34;
 }
 
 .checkmarkIcon:hover {
@@ -19,5 +19,5 @@
 
 .editIcon:hover,
 .viewIcon:hover {
-  stroke: #34cdeb;
+  fill: #34cdeb;
 }
