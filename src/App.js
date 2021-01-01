@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import MDEditor from '@uiw/react-md-editor';
 
+import Delete from './components/icons/Delete';
+import Checkmark from './components/icons/Checkmark';
+
+import styles from './components/icons/icons.module.css';
+
 const App = () => {
   const [data, setData] = useState([{ text: 'Test note\n# Hello' }]);
   const [note, setNote] = useState('Start your new note here');
@@ -59,10 +64,10 @@ const App = () => {
       .split('\n')[0]
       .replace(/[^\w\s]/gi, '');
 
-    if (firstPhraseWithoutSpecialCharacters.length > 70) {
+    if (firstPhraseWithoutSpecialCharacters.length > 20) {
       firstPhraseWithoutSpecialCharacters = firstPhraseWithoutSpecialCharacters.substring(
         0,
-        70
+        20
       );
       // firstPhraseWithoutSpecialCharacters.substring(0, 70 - 3) + '...';
     }
@@ -89,38 +94,37 @@ const App = () => {
       <div className="w-3/12 bg-gray-200 h-screen overflow-scroll">
         {editMode ? (
           <button
-            className="py-2 px-5 w-full bg-gray-700 text-white hover:bg-gray-900"
+            className="py-2 px-5 w-full bg-gray-700 text-white hover:bg-gray-900 transition-colors duration-200 ease-in-out"
             onClick={() => saveChanges(noteToEdit, note)}
           >
             Save Changes
           </button>
         ) : (
           <button
-            className="py-2 px-5 w-full bg-blue-700 text-white hover:bg-blue-900"
+            className="py-2 px-5 w-full bg-blue-700 text-white hover:bg-blue-900 transition-colors duration-200 ease-in-out"
             onClick={() => addNote()}
           >
             Add note
           </button>
         )}
         {data.map((note) => (
-          <div key={note.text} className="flex flex-col mb-10">
-            <div className="w-full">
-              <div className="w-full py-5 px-5 bg-white">
-                <p className="font-bold text-lg">{titleOfNote(note.text)}</p>
-              </div>
-            </div>
-            <div>
+          <div
+            key={note.text}
+            className="w-full py-5 px-5 bg-white flex flex-row justify-between content-center border-b-2"
+          >
+            <p className="font-bold text-lg w-9/12">{titleOfNote(note.text)}</p>
+            <div className="w-3/12 flex flex-row justify-end">
               <button
                 className="text-xs font-light mr-2 text-red-400 hover:text-red-500"
                 onClick={() => deleteNote(note)}
               >
-                Delete Note
+                <Delete className={styles.deleteIcon} />
               </button>
               <button
                 className="text-xs font-light mr-2 text-blue-400 hover:text-blue-500"
                 onClick={() => viewNote(note)}
               >
-                View Note
+                <Checkmark className={styles.checkmarkIcon} />
               </button>
             </div>
           </div>
