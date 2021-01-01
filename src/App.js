@@ -4,6 +4,8 @@ import MDEditor from '@uiw/react-md-editor';
 
 import Delete from './components/icons/Delete';
 import Checkmark from './components/icons/Checkmark';
+import Edit from './components/icons/Edit';
+import View from './components/icons/View';
 
 import styles from './components/icons/icons.module.css';
 
@@ -115,16 +117,22 @@ const App = () => {
             <p className="font-bold text-lg w-9/12">{titleOfNote(note.text)}</p>
             <div className="w-3/12 flex flex-row justify-end">
               <button
-                className="text-xs font-light mr-2 text-red-400 hover:text-red-500"
-                onClick={() => deleteNote(note)}
+                className="text-xs font-light mr-2 text-blue-400 hover:text-blue-500"
+                onClick={() => viewNote(note)}
               >
-                <Delete className={styles.deleteIcon} />
+                <Edit className={styles.editIcon} />
               </button>
               <button
                 className="text-xs font-light mr-2 text-blue-400 hover:text-blue-500"
                 onClick={() => viewNote(note)}
               >
-                <Checkmark className={styles.checkmarkIcon} />
+                <View className={styles.viewIcon} />
+              </button>
+              <button
+                className="text-xs font-light mr-2 text-red-400 hover:text-red-500"
+                onClick={() => deleteNote(note)}
+              >
+                <Delete className={styles.deleteIcon} />
               </button>
             </div>
           </div>
