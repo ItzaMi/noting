@@ -3,7 +3,6 @@ import './App.css';
 import MDEditor from '@uiw/react-md-editor';
 
 import Delete from './components/icons/Delete';
-import Checkmark from './components/icons/Checkmark';
 import Edit from './components/icons/Edit';
 import View from './components/icons/View';
 
@@ -11,7 +10,11 @@ import styles from './components/icons/icons.module.css';
 
 const App = () => {
   const [data, setData] = useState([
-    { text: 'Test note\n# Hello', noteIsInViewMode: false },
+    {
+      text: 'Test note\n# Hello',
+      noteIsInViewMode: false,
+      noteIsInEditMode: false,
+    },
   ]);
   const [note, setNote] = useState('Start your new note here');
   const [viewMode, setViewMode] = useState(false);
@@ -55,12 +58,12 @@ const App = () => {
   });
 
   const editNote = (noteToBeEdit) => {
-    setViewMode(false);
-    noteToBeEdit.noteIsInViewMode = false;
     if (editMode) {
       setError(true);
       return;
     }
+    setViewMode(false);
+    noteToBeEdit.noteIsInViewMode = false;
     setNote(noteToBeEdit.text);
     setEditMode(true);
     noteToBeEdit.isBeingEdited = true;
@@ -68,6 +71,12 @@ const App = () => {
   };
 
   const viewNote = (noteSetToView) => {
+    const getNoteWithViewModeTrue = data.filter(
+      (note) => note.noteIsInViewMode === true
+    );
+    if (getNoteWithViewModeTrue.length) {
+      getNoteWithViewModeTrue[0].noteIsInViewMode = false;
+    }
     setViewMode(true);
     noteSetToView.noteIsInViewMode = true;
     setNoteToBeViewed(noteSetToView.text);
@@ -93,7 +102,7 @@ const App = () => {
       <div className="w-9/12">
         {viewMode ? (
           <MDEditor.Markdown
-            className="py-2 px-5"
+            className="py-5 px-7"
             height={editorHeight}
             style={{ height: editorHeight, borderRadius: '0px' }}
             source={noteToBeViewed}
@@ -102,8 +111,6 @@ const App = () => {
           <MDEditor
             className="py-2 px-5"
             id="noteinput"
-            type="text"
-            placeholder="Enter a new note"
             value={note}
             onChange={setNote}
             preview="edit"
@@ -133,31 +140,34 @@ const App = () => {
         {data.map((note, id) => (
           <div
             key={note.text + id}
-            className="w-full py-5 px-5 bg-white flex flex-row justify-between content-center border-b-2"
+            className="w-full py-5 px-5 bg-white flex flex-row justify-between items-center border-b-2"
           >
             <p className="font-bold text-lg w-9/12">{titleOfNote(note.text)}</p>
-            <div className="w-3/12 flex flex-row justify-end">
-              {note.noteIsInViewMode ? (
-                <button
-                  className="text-xs font-light mr-2 text-blue-400 hover:text-blue-500"
-                  onClick={() => editNote(note)}
-                >
-                  <Edit className={styles.editIcon} />
-                </button>
+            <div className="w-3/12 flex flex-row justify-end items-center">
+              {note.isBeingEdited ? (
+                <p className="text-gray-400 text-opacity-80 text-sm">Editing</p>
               ) : (
-                <button
-                  className="text-xs font-light mr-2 text-blue-400 hover:text-blue-500"
-                  onClick={() => viewNote(note)}
-                >
-                  <View className={styles.viewIcon} />
-                </button>
+                <>
+                  {note.noteIsInViewMode ? (
+                    <button
+                      className="mr-2 h-20px"
+                      onClick={() => editNote(note)}
+                    >
+                      <Edit className={styles.editIcon} />
+                    </button>
+                  ) : (
+                    <button
+                      className="mr-2 h-20px"
+                      onClick={() => viewNote(note)}
+                    >
+                      <View className={styles.viewIcon} />
+                    </button>
+                  )}
+                  <button className="h-20px" onClick={() => deleteNote(note)}>
+                    <Delete className={styles.deleteIcon} />
+                  </button>
+                </>
               )}
-              <button
-                className="text-xs font-light mr-2 text-red-400 hover:text-red-500"
-                onClick={() => deleteNote(note)}
-              >
-                <Delete className={styles.deleteIcon} />
-              </button>
             </div>
           </div>
         ))}
