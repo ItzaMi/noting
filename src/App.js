@@ -3,20 +3,29 @@ import './App.css';
 import MDEditor from '@uiw/react-md-editor';
 
 import Delete from './components/icons/Delete';
-import Checkmark from './components/icons/Checkmark';
+import Edit from './components/icons/Edit';
+import View from './components/icons/View';
 
 import styles from './components/icons/icons.module.css';
 
 const App = () => {
-  const [data, setData] = useState([{ text: 'Test note\n# Hello' }]);
+  const [data, setData] = useState([
+    {
+      text: 'Test note\n# Hello',
+      noteIsInViewMode: false,
+      noteIsInEditMode: false,
+    },
+  ]);
   const [note, setNote] = useState('Start your new note here');
+  const [viewMode, setViewMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState('');
+  const [noteToBeViewed, setNoteToBeViewed] = useState('');
   const [error, setError] = useState(false);
   const [editorHeight, setEditorHeight] = useState(window.innerHeight);
 
   const addNote = () => {
-    setData((data) => [...data, { text: note }]);
+    setData((data) => [...data, { text: note, noteIsInViewMode: false }]);
     setNote('Start your new note here');
   };
 
@@ -48,15 +57,29 @@ const App = () => {
     window.addEventListener('resize', updateMDEditorHeight);
   });
 
-  const viewNote = (noteToBeEdit) => {
+  const editNote = (noteToBeEdit) => {
     if (editMode) {
       setError(true);
       return;
     }
+    setViewMode(false);
+    noteToBeEdit.noteIsInViewMode = false;
     setNote(noteToBeEdit.text);
     setEditMode(true);
     noteToBeEdit.isBeingEdited = true;
     setNoteToEdit(noteToBeEdit.text);
+  };
+
+  const viewNote = (noteSetToView) => {
+    const getNoteWithViewModeTrue = data.filter(
+      (note) => note.noteIsInViewMode === true
+    );
+    if (getNoteWithViewModeTrue.length) {
+      getNoteWithViewModeTrue[0].noteIsInViewMode = false;
+    }
+    setViewMode(true);
+    noteSetToView.noteIsInViewMode = true;
+    setNoteToBeViewed(noteSetToView.text);
   };
 
   const titleOfNote = (noteText) => {
@@ -77,19 +100,26 @@ const App = () => {
   return (
     <div className="relative bg-gray-100 h-screen flex flex-row">
       <div className="w-9/12">
-        <MDEditor
-          className="py-2 px-5"
-          id="noteinput"
-          type="text"
-          placeholder="Enter a new note"
-          value={note}
-          onChange={setNote}
-          preview="edit"
-          hideToolbar
-          visiableDragbar={false}
-          height={editorHeight}
-          style={{ height: editorHeight, borderRadius: '0px' }}
-        />
+        {viewMode ? (
+          <MDEditor.Markdown
+            className="py-5 px-7"
+            height={editorHeight}
+            style={{ height: editorHeight, borderRadius: '0px' }}
+            source={noteToBeViewed}
+          />
+        ) : (
+          <MDEditor
+            className="py-2 px-5"
+            id="noteinput"
+            value={note}
+            onChange={setNote}
+            preview="edit"
+            hideToolbar
+            visiableDragbar={false}
+            height={editorHeight}
+            style={{ height: editorHeight, borderRadius: '0px' }}
+          />
+        )}
       </div>
       <div className="w-3/12 bg-gray-200 h-screen overflow-scroll">
         {editMode ? (
@@ -107,25 +137,37 @@ const App = () => {
             Add note
           </button>
         )}
-        {data.map((note) => (
+        {data.map((note, id) => (
           <div
-            key={note.text}
-            className="w-full py-5 px-5 bg-white flex flex-row justify-between content-center border-b-2"
+            key={note.text + id}
+            className="w-full py-5 px-5 bg-white flex flex-row justify-between items-center border-b-2"
           >
             <p className="font-bold text-lg w-9/12">{titleOfNote(note.text)}</p>
-            <div className="w-3/12 flex flex-row justify-end">
-              <button
-                className="text-xs font-light mr-2 text-red-400 hover:text-red-500"
-                onClick={() => deleteNote(note)}
-              >
-                <Delete className={styles.deleteIcon} />
-              </button>
-              <button
-                className="text-xs font-light mr-2 text-blue-400 hover:text-blue-500"
-                onClick={() => viewNote(note)}
-              >
-                <Checkmark className={styles.checkmarkIcon} />
-              </button>
+            <div className="w-3/12 flex flex-row justify-end items-center">
+              {note.isBeingEdited ? (
+                <p className="text-gray-400 text-opacity-80 text-sm">Editing</p>
+              ) : (
+                <>
+                  {note.noteIsInViewMode ? (
+                    <button
+                      className="mr-2 h-20px"
+                      onClick={() => editNote(note)}
+                    >
+                      <Edit className={styles.editIcon} />
+                    </button>
+                  ) : (
+                    <button
+                      className="mr-2 h-20px"
+                      onClick={() => viewNote(note)}
+                    >
+                      <View className={styles.viewIcon} />
+                    </button>
+                  )}
+                  <button className="h-20px" onClick={() => deleteNote(note)}>
+                    <Delete className={styles.deleteIcon} />
+                  </button>
+                </>
+              )}
             </div>
           </div>
         ))}
