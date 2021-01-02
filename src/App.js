@@ -123,17 +123,13 @@ const App = () => {
           <Button text="Add note" onClickAction={() => addNote()} />
         )}
         {data.map((note, id) => (
-          <div
-            key={note.text + id}
-            className="w-full py-5 px-5 bg-white flex flex-row justify-between items-center border-b-2"
-          >
-            <Note
-              note={note}
-              editNoteFunction={() => editNote(note)}
-              viewNoteFunction={() => viewNote(note)}
-              deleteNoteFunction={() => deleteNote(note)}
-            />
-          </div>
+          <Note
+            note={note}
+            id={id}
+            editNoteFunction={() => editNote(note)}
+            viewNoteFunction={() => viewNote(note)}
+            deleteNoteFunction={() => deleteNote(note)}
+          />
         ))}
       </div>
       {error && <Error />}
