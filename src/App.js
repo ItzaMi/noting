@@ -9,13 +9,22 @@ import View from './components/icons/View';
 import styles from './components/icons/icons.module.css';
 
 const App = () => {
-  const [data, setData] = useState([
-    {
-      text: 'Test note\n# Hello',
-      noteIsInViewMode: false,
-      noteIsInEditMode: false,
-    },
-  ]);
+  const [data, setData] = useState(() => {
+    const localStorageValue = window.localStorage.getItem('data');
+
+    const defaultValue = [
+      {
+        text: 'Test note\n# Hello',
+        noteIsInViewMode: false,
+        noteIsInEditMode: false,
+      },
+    ];
+
+    return localStorageValue !== null
+      ? JSON.parse(localStorageValue)
+      : defaultValue;
+  });
+
   const [note, setNote] = useState('Start your new note here');
   const [viewMode, setViewMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -28,6 +37,15 @@ const App = () => {
     setData((data) => [...data, { text: note, noteIsInViewMode: false }]);
     setNote('Start your new note here');
   };
+
+  useEffect(() => {
+    localStorage.setItem('data', JSON.stringify(data));
+  }, [data]);
+
+  useEffect(() => {
+    window.addEventListener('load', updateMDEditorHeight);
+    window.addEventListener('resize', updateMDEditorHeight);
+  });
 
   const deleteNote = (noteToDelete) => {
     const arrayOfNotes = data.filter((note) => note.text !== noteToDelete.text);
@@ -51,11 +69,6 @@ const App = () => {
   const updateMDEditorHeight = () => {
     setEditorHeight(window.innerHeight);
   };
-
-  useEffect(() => {
-    window.addEventListener('load', updateMDEditorHeight);
-    window.addEventListener('resize', updateMDEditorHeight);
-  });
 
   const editNote = (noteToBeEdit) => {
     if (editMode) {
