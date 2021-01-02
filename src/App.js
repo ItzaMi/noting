@@ -5,6 +5,7 @@ import MDEditor from '@uiw/react-md-editor';
 import Delete from './components/icons/Delete';
 import Edit from './components/icons/Edit';
 import View from './components/icons/View';
+import Error from './components/toast/Error';
 
 import styles from './components/icons/icons.module.css';
 
@@ -48,6 +49,10 @@ const App = () => {
   });
 
   const deleteNote = (noteToDelete) => {
+    if (editMode) {
+      setError(true);
+      return;
+    }
     const arrayOfNotes = data.filter((note) => note.text !== noteToDelete.text);
     setData(arrayOfNotes);
   };
@@ -85,6 +90,10 @@ const App = () => {
   };
 
   const viewNote = (noteSetToView) => {
+    if (editMode) {
+      setError(true);
+      return;
+    }
     const getNoteWithViewModeTrue = data.filter(
       (note) => note.noteIsInViewMode === true
     );
@@ -186,13 +195,7 @@ const App = () => {
           </div>
         ))}
       </div>
-      {error && (
-        <div className="absolute p-5 bg-red-200 bottom-10 right-10 align-middle text-red-600">
-          <p className="text-sm">
-            There's already a note being edited. Finish that one first!
-          </p>
-        </div>
-      )}
+      {error && <Error />}
     </div>
   );
 };
