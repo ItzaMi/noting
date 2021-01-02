@@ -118,14 +118,15 @@ const App = () => {
           <Button
             text="Save changes"
             onClickAction={() => saveChanges(noteToEdit, note)}
+            type="save"
           />
         ) : (
-          <Button text="Add note" onClickAction={() => addNote()} />
+          <Button text="Add note" onClickAction={() => addNote()} type="add" />
         )}
         {data.map((note, id) => (
           <Note
             note={note}
-            id={id}
+            key={note.text + id}
             editNoteFunction={() => editNote(note)}
             viewNoteFunction={() => viewNote(note)}
             deleteNoteFunction={() => deleteNote(note)}
