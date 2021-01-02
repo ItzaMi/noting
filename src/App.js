@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import MDEditor from '@uiw/react-md-editor';
 
-import Delete from './components/icons/Delete';
-import Edit from './components/icons/Edit';
-import View from './components/icons/View';
 import Error from './components/toast/Error';
-
-import styles from './components/icons/icons.module.css';
+import Button from './components/buttons/Button';
+import MarkdownPanel from './components/markdownPanel/MarkdownPanel';
+import Note from './components/note/Note';
 
 const App = () => {
   const [data, setData] = useState(() => {
@@ -105,93 +102,37 @@ const App = () => {
     setNoteToBeViewed(noteSetToView.text);
   };
 
-  const titleOfNote = (noteText) => {
-    let firstPhraseWithoutSpecialCharacters = noteText
-      .split('\n')[0]
-      .replace(/[^\w\s]/gi, '');
-
-    if (firstPhraseWithoutSpecialCharacters.length > 20) {
-      firstPhraseWithoutSpecialCharacters = firstPhraseWithoutSpecialCharacters.substring(
-        0,
-        20
-      );
-      // firstPhraseWithoutSpecialCharacters.substring(0, 70 - 3) + '...';
-    }
-    return firstPhraseWithoutSpecialCharacters;
-  };
-
   return (
     <div className="relative bg-gray-100 h-screen flex flex-row">
       <div className="w-9/12">
-        {viewMode ? (
-          <MDEditor.Markdown
-            className="py-5 px-7"
-            height={editorHeight}
-            style={{ height: editorHeight, borderRadius: '0px' }}
-            source={noteToBeViewed}
-          />
-        ) : (
-          <MDEditor
-            className="py-2 px-5"
-            id="noteinput"
-            value={note}
-            onChange={setNote}
-            preview="edit"
-            hideToolbar
-            visiableDragbar={false}
-            height={editorHeight}
-            style={{ height: editorHeight, borderRadius: '0px' }}
-          />
-        )}
+        <MarkdownPanel
+          viewMode={viewMode}
+          editorHeight={editorHeight}
+          noteToBeViewed={noteToBeViewed}
+          note={note}
+          setNote={setNote}
+        />
       </div>
       <div className="w-3/12 bg-gray-200 h-screen overflow-scroll">
         {editMode ? (
-          <button
-            className="py-2 px-5 w-full bg-gray-700 text-white hover:bg-gray-900 transition-colors duration-200 ease-in-out"
-            onClick={() => saveChanges(noteToEdit, note)}
-          >
-            Save Changes
-          </button>
+          <Button
+            text="Save changes"
+            onClickAction={() => saveChanges(noteToEdit, note)}
+          />
         ) : (
-          <button
-            className="py-2 px-5 w-full bg-blue-700 text-white hover:bg-blue-900 transition-colors duration-200 ease-in-out"
-            onClick={() => addNote()}
-          >
-            Add note
-          </button>
+          <Button text="Add note" onClickAction={() => addNote()} />
         )}
         {data.map((note, id) => (
           <div
             key={note.text + id}
             className="w-full py-5 px-5 bg-white flex flex-row justify-between items-center border-b-2"
           >
-            <p className="font-bold text-lg w-9/12">{titleOfNote(note.text)}</p>
-            <div className="w-3/12 flex flex-row justify-end items-center">
-              {note.isBeingEdited ? (
-                <p className="text-gray-400 text-opacity-80 text-sm">Editing</p>
-              ) : (
-                <>
-                  {note.noteIsInViewMode ? (
-                    <button
-                      className="mr-2 h-20px"
-                      onClick={() => editNote(note)}
-                    >
-                      <Edit className={styles.editIcon} />
-                    </button>
-                  ) : (
-                    <button
-                      className="mr-2 h-20px"
-                      onClick={() => viewNote(note)}
-                    >
-                      <View className={styles.viewIcon} />
-                    </button>
-                  )}
-                  <button className="h-20px" onClick={() => deleteNote(note)}>
-                    <Delete className={styles.deleteIcon} />
-                  </button>
-                </>
-              )}
-            </div>
+            <Note
+              note={note}
+              editNoteFunction={() => editNote(note)}
+              viewNoteFunction={() => viewNote(note)}
+              deleteNoteFunction={() => deleteNote(note)}
+            />
           </div>
         ))}
       </div>
