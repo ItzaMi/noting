@@ -2,6 +2,7 @@ import IconButton from '../buttons/IconButton';
 
 const Note = ({
   note,
+  id,
   editNoteFunction,
   viewNoteFunction,
   deleteNoteFunction,
@@ -22,7 +23,10 @@ const Note = ({
   };
 
   return (
-    <>
+    <div
+      key={note.text + id}
+      className="w-full py-5 px-5 bg-white flex flex-row justify-between items-center border-b-2"
+    >
       <p className="font-bold text-lg w-9/12">{titleOfNote(note.text)}</p>
       <div className="w-3/12 flex flex-row justify-end items-center">
         {note.isBeingEdited ? (
@@ -41,7 +45,7 @@ const Note = ({
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 
