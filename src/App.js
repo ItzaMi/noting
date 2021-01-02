@@ -58,6 +58,7 @@ const App = () => {
     setEditMode(false);
     noteToChange[0].isBeingEdited = false;
     setNote('Start your new note here');
+    localStorage.setItem('data', JSON.stringify(data));
   };
 
   if (error) {
