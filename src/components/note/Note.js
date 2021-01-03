@@ -1,7 +1,9 @@
 import IconButton from '../buttons/IconButton';
+import SingleLineTextLoader from '../loaders/SingleLineTextLoader';
 
 const Note = ({
   note,
+  loading,
   editNoteFunction,
   viewNoteFunction,
   deleteNoteFunction,
@@ -23,24 +25,36 @@ const Note = ({
 
   return (
     <div className="w-full py-5 px-5 bg-white flex flex-row justify-between items-center border-b-2">
-      <p className="font-bold text-lg w-9/12">{titleOfNote(note.text)}</p>
-      <div className="w-3/12 flex flex-row justify-end items-center">
-        {note.isBeingEdited ? (
-          <p className="text-gray-400 text-opacity-80 text-sm">Editing</p>
-        ) : (
-          <>
-            {note.noteIsInViewMode ? (
-              <IconButton onClickAction={editNoteFunction} typeOfIcon="edit" />
+      {loading ? (
+        <SingleLineTextLoader />
+      ) : (
+        <>
+          <p className="font-bold text-lg w-9/12">{titleOfNote(note.text)}</p>
+          <div className="w-3/12 flex flex-row justify-end items-center">
+            {note.isBeingEdited ? (
+              <p className="text-gray-400 text-opacity-80 text-sm">Editing</p>
             ) : (
-              <IconButton onClickAction={viewNoteFunction} typeOfIcon="view" />
+              <>
+                {note.noteIsInViewMode ? (
+                  <IconButton
+                    onClickAction={editNoteFunction}
+                    typeOfIcon="edit"
+                  />
+                ) : (
+                  <IconButton
+                    onClickAction={viewNoteFunction}
+                    typeOfIcon="view"
+                  />
+                )}
+                <IconButton
+                  onClickAction={deleteNoteFunction}
+                  typeOfIcon="delete"
+                />
+              </>
             )}
-            <IconButton
-              onClickAction={deleteNoteFunction}
-              typeOfIcon="delete"
-            />
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
