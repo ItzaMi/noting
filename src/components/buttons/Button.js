@@ -1,3 +1,5 @@
+import ButtonLoader from '../loaders/ButtonLoader';
+
 const Button = ({ text, onClickAction, type }) => {
   return (
     <button
@@ -6,10 +8,10 @@ const Button = ({ text, onClickAction, type }) => {
           type === 'save'
             ? 'bg-gray-700 hover:bg-gray-900'
             : 'bg-blue-700 hover:bg-blue-900'
-        }`}
+        } + ${type === 'loading' && 'flex flex-row justify-center'}`}
       onClick={onClickAction}
     >
-      {text}
+      {type === 'loading' ? <ButtonLoader /> : text}
     </button>
   );
 };
