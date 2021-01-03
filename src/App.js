@@ -52,7 +52,7 @@ const App = () => {
     if (loading) {
       setLoading(false);
     }
-    if (editMode) {
+    if (noteSetToView.noteIsInEditMode) {
       setError(true);
       return;
     }
@@ -78,8 +78,7 @@ const App = () => {
   }, []);
 
   const addNote = () => {
-    setData((data) => [...data, { text: note, noteIsInViewMode: false }]);
-    setNote('Start your new note here');
+    setData((data) => [...data, { text: note, noteIsInViewMode: true }]);
   };
 
   const deleteNote = (noteToDelete) => {
@@ -94,11 +93,11 @@ const App = () => {
   const saveChanges = (noteToEdit, newTextNote) => {
     const noteToChange = data.filter((note) => note.text === noteToEdit);
     noteToChange[0].text = newTextNote;
+    noteToChange[0].noteIsInEditMode = false;
     setEditMode(false);
-    noteToChange[0].isBeingEdited = false;
     setViewMode(true);
     noteToChange[0].noteIsInViewMode = true;
-    viewMode(noteToChange[0]);
+    viewNote(noteToChange[0]);
     localStorage.setItem('data', JSON.stringify(data));
   };
 
@@ -121,7 +120,7 @@ const App = () => {
     noteToBeEdit.noteIsInViewMode = false;
     setNote(noteToBeEdit.text);
     setEditMode(true);
-    noteToBeEdit.isBeingEdited = true;
+    noteToBeEdit.noteIsInEditMode = true;
     setNoteToEdit(noteToBeEdit.text);
   };
 
