@@ -5,7 +5,7 @@ import Error from './components/toast/Error';
 import Button from './components/buttons/Button';
 import MarkdownPanel from './components/markdownPanel/MarkdownPanel';
 import Note from './components/note/Note';
-import TextLoader from './components/loaders/TextLoader';
+import BlockTextLoader from './components/loaders/BlockTextLoader';
 
 const App = () => {
   const [data, setData] = useState(() => {
@@ -140,7 +140,7 @@ const App = () => {
     <div className="relative bg-gray-100 h-screen flex flex-row">
       <div className="w-9/12">
         {loading ? (
-          <TextLoader />
+          <BlockTextLoader />
         ) : (
           <MarkdownPanel
             viewMode={viewMode}
@@ -169,6 +169,7 @@ const App = () => {
           <Note
             note={note}
             key={note.text + id}
+            loading={loading}
             editNoteFunction={() => editNote(note)}
             viewNoteFunction={() => viewNote(note)}
             deleteNoteFunction={() => deleteNote(note)}
