@@ -7,3 +7,19 @@
   font-size: 18px !important;
   line-height: 24px !important;
 }
+
+.wmde-markdown code {
+  background-color: #1d4ed8 !important;
+  color: #fff !important;
+}
+
+.wmde-markdown a {
+  color: #ff9a00 !important;
+}
+
+.darkMode .w-md-editor-text-pre,
+.darkMode .w-md-editor-text-pre span,
+.w-md-editor-text-input {
+  color: #fff;
+  caret-color: #fff;
+}

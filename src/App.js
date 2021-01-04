@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import Error from './components/toast/Error';
@@ -6,8 +6,10 @@ import Button from './components/buttons/Button';
 import MarkdownPanel from './components/markdownPanel/MarkdownPanel';
 import Note from './components/note/Note';
 import BlockTextLoader from './components/loaders/BlockTextLoader';
+import IconButton from './components/buttons/IconButton';
 
 const App = () => {
+  const [darkMode, setDarkMode] = useState(true);
   const [data, setData] = useState(() => {
     const localStorageValue = window.localStorage.getItem('data');
 
@@ -136,46 +138,65 @@ const App = () => {
   };
 
   return (
-    <div className="relative bg-gray-100 h-screen flex flex-row">
-      <div className="w-9/12">
-        {loading ? (
-          <BlockTextLoader />
-        ) : (
-          <MarkdownPanel
-            viewMode={viewMode}
-            editorHeight={editorHeight}
-            noteToBeViewed={noteToBeViewed}
-            note={note}
-            setNote={setNote}
-          />
-        )}
+    <div className={`${darkMode && 'dark'}`}>
+      <div className="relative bg-gray-100 dark:bg-background-grey h-screen flex flex-row">
+        <div className="w-9/12 ">
+          {loading ? (
+            <BlockTextLoader />
+          ) : (
+            <MarkdownPanel
+              viewMode={viewMode}
+              editorHeight={editorHeight}
+              noteToBeViewed={noteToBeViewed}
+              note={note}
+              setNote={setNote}
+              darkMode={darkMode}
+            />
+          )}
+        </div>
+        <div className="w-3/12 bg-gray-200 dark:bg-sidebar-grey h-screen overflow-scroll">
+          <div className="flex flex-row">
+            {loading ? (
+              <Button text="" type="loading" />
+            ) : editMode ? (
+              <Button
+                text="Save changes"
+                onClickAction={() => saveChanges(noteToEdit, note)}
+                type="save"
+              />
+            ) : viewMode ? (
+              <Button
+                text="New note"
+                onClickAction={() => newNote()}
+                type="new"
+              />
+            ) : (
+              <Button
+                text="Add note"
+                onClickAction={() => addNote()}
+                type="add"
+              />
+            )}
+            <IconButton
+              onClickAction={() => setDarkMode(!darkMode)}
+              typeOfIcon="dark"
+              darkMode={darkMode}
+            />
+          </div>
+          {data.map((note, id) => (
+            <Note
+              note={note}
+              key={note.text + id}
+              loading={loading}
+              editNoteFunction={() => editNote(note)}
+              viewNoteFunction={() => viewNote(note)}
+              deleteNoteFunction={() => deleteNote(note)}
+              editMode={editMode}
+            />
+          ))}
+        </div>
+        {error && <Error />}
       </div>
-      <div className="w-3/12 bg-gray-200 h-screen overflow-scroll">
-        {loading ? (
-          <Button text="" type="loading" />
-        ) : editMode ? (
-          <Button
-            text="Save changes"
-            onClickAction={() => saveChanges(noteToEdit, note)}
-            type="save"
-          />
-        ) : viewMode ? (
-          <Button text="New note" onClickAction={() => newNote()} type="new" />
-        ) : (
-          <Button text="Add note" onClickAction={() => addNote()} type="add" />
-        )}
-        {data.map((note, id) => (
-          <Note
-            note={note}
-            key={note.text + id}
-            loading={loading}
-            editNoteFunction={() => editNote(note)}
-            viewNoteFunction={() => viewNote(note)}
-            deleteNoteFunction={() => deleteNote(note)}
-          />
-        ))}
-      </div>
-      {error && <Error />}
     </div>
   );
 };

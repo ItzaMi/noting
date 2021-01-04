@@ -7,6 +7,7 @@ const Note = ({
   editNoteFunction,
   viewNoteFunction,
   deleteNoteFunction,
+  editMode,
 }) => {
   const titleOfNote = (noteText) => {
     let firstPhraseWithoutSpecialCharacters = noteText
@@ -24,16 +25,20 @@ const Note = ({
   };
 
   return (
-    <div className="w-full py-5 px-5 bg-white flex flex-row justify-between items-center border-b-2">
+    <div className="w-full py-5 px-5 flex flex-row justify-between items-center border-b-1 border-gray-500">
       {loading ? (
         <SingleLineTextLoader />
       ) : (
         <>
-          <p className="font-bold text-lg w-9/12">{titleOfNote(note.text)}</p>
+          <p className="font-bold text-lg w-9/12 dark:text-white">
+            {titleOfNote(note.text)}
+          </p>
           <div className="w-3/12 flex flex-row justify-end items-center">
-            {note.isBeingEdited ? (
-              <p className="text-gray-400 text-opacity-80 text-sm">Editing</p>
-            ) : (
+            {note.noteIsInEditMode ? (
+              <p className="text-gray-400 dark:text-white text-opacity-80 text-sm">
+                Editing
+              </p>
+            ) : editMode === true ? null : (
               <>
                 {note.noteIsInViewMode ? (
                   <IconButton

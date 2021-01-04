@@ -6,13 +6,30 @@
   transition: all 0.3s ease-in-out;
 }
 
+.editIcon:hover,
+.viewIcon:hover,
 .deleteIcon:hover {
-  fill: #eb4c34;
   opacity: 1;
 }
 
-.editIcon:hover,
-.viewIcon:hover {
-  fill: #34cdeb;
+.sunIcon {
+  fill: #fff;
+  opacity: 0.8;
+  transition: all 0.3s ease-in-out;
+}
+
+.moonIcon {
+  fill: #818386;
+  opacity: 0.8;
+  transition: all 0.3s ease-in-out;
+}
+
+.sunIcon:hover {
+  fill: #ebd334;
+  opacity: 1;
+}
+
+.moonIcon:hover {
+  fill: #666666;
   opacity: 1;
 }

@@ -6,19 +6,22 @@ const MarkdownPanel = ({
   noteToBeViewed,
   note,
   setNote,
+  darkMode,
 }) => {
   return (
     <>
       {viewMode ? (
         <MDEditor.Markdown
-          className="py-5 px-7"
+          className="py-5 px-7 dark:text-gray-200"
           height={editorHeight}
           style={{ height: editorHeight, borderRadius: '0px' }}
           source={noteToBeViewed}
         />
       ) : (
         <MDEditor
-          className="py-2 px-5"
+          className={`py-2 px-5 dark:bg-background-grey ${
+            darkMode && 'darkMode'
+          }`}
           id="noteinput"
           value={note}
           onChange={setNote}
@@ -26,7 +29,10 @@ const MarkdownPanel = ({
           hideToolbar
           visiableDragbar={false}
           height={editorHeight}
-          style={{ height: editorHeight, borderRadius: '0px' }}
+          style={{
+            height: editorHeight,
+            borderRadius: '0px',
+          }}
         />
       )}
     </>
