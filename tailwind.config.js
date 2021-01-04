@@ -12,6 +12,11 @@ module.exports = {
       },
       backgroundColor: {
         'dark-grey': '#19191a',
+        'background-grey': '#333333',
+        'sidebar-grey': '#242424',
+      },
+      borderWidth: {
+        1: '1px',
       },
     },
   },
