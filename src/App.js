@@ -139,7 +139,7 @@ const App = () => {
 
   return (
     <div className={`${darkMode && 'dark'}`}>
-      <div className="relative bg-gray-100 dark:bg-dark-grey h-screen flex flex-row">
+      <div className="relative bg-gray-100 dark:bg-background-grey h-screen flex flex-row">
         <div className="w-9/12 ">
           {loading ? (
             <BlockTextLoader />
@@ -150,10 +150,11 @@ const App = () => {
               noteToBeViewed={noteToBeViewed}
               note={note}
               setNote={setNote}
+              darkMode={darkMode}
             />
           )}
         </div>
-        <div className="w-3/12 bg-gray-200 h-screen overflow-scroll">
+        <div className="w-3/12 bg-gray-200 dark:bg-sidebar-grey h-screen overflow-scroll">
           <div className="flex flex-row">
             {loading ? (
               <Button text="" type="loading" />
@@ -190,6 +191,7 @@ const App = () => {
               editNoteFunction={() => editNote(note)}
               viewNoteFunction={() => viewNote(note)}
               deleteNoteFunction={() => deleteNote(note)}
+              editMode={editMode}
             />
           ))}
         </div>
