@@ -13,6 +13,10 @@
   color: #fff !important;
 }
 
+.wmde-markdown a {
+  color: #ff9a00 !important;
+}
+
 .darkMode .w-md-editor-text-pre,
 .darkMode .w-md-editor-text-pre span,
 .w-md-editor-text-input {
