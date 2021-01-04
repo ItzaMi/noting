@@ -7,3 +7,8 @@
   font-size: 18px !important;
   line-height: 24px !important;
 }
+
+.darkMode .w-md-editor-text-pre,
+.darkMode .w-md-editor-text-pre span {
+  color: #fff !important;
+}
