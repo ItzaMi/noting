@@ -8,7 +8,14 @@
   line-height: 24px !important;
 }
 
-.darkMode .w-md-editor-text-pre,
-.darkMode .w-md-editor-text-pre span {
+.wmde-markdown code {
+  background-color: #1d4ed8 !important;
   color: #fff !important;
+}
+
+.darkMode .w-md-editor-text-pre,
+.darkMode .w-md-editor-text-pre span,
+.w-md-editor-text-input {
+  color: #fff;
+  caret-color: #fff;
 }
