@@ -12,7 +12,7 @@ const MarkdownPanel = ({
     <>
       {viewMode ? (
         <MDEditor.Markdown
-          className="py-5 px-7 dark:text-gray-200"
+          className="py-5 px-7 dark:text-gray-200 overflow-scroll"
           height={editorHeight}
           style={{ height: editorHeight, borderRadius: '0px' }}
           source={noteToBeViewed}
